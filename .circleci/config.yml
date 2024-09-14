@@ -11,4 +11,28 @@ jobs:
       - image: cimg/python:3.11.10
     steps:
       - checkout
-      - run: python --version
+      - run:
+          name: Install UV
+          command: |
+            # Install uv via curl
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run:
+          name: Initialize UV Project
+          command: |
+            cd mAIgic
+            uv sync
+      - run:
+          name: Lint with Ruff
+          command: |
+            cd mAIgic
+            uv run ruff check .
+      - run:
+          name: Format with Ruff
+          command: |
+            cd mAIgic
+            uv run ruff check . --fix
+      - run:
+          name: Run Tests with Pytest
+          command: |
+            cd mAIgic
+            uv run pytest
