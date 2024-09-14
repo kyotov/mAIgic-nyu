@@ -16,24 +16,20 @@ jobs:
           command: |
             # Install uv via curl
             curl -LsSf https://astral.sh/uv/install.sh | sh
-            ls -al
+            source $HOME/.cargo/env
       - run:
           name: Initialize UV Project
           command: |
-            ls -al
             uv sync
       - run:
           name: Lint with Ruff
           command: |
-            cd mAIgic
             uv run ruff check .
       - run:
           name: Format with Ruff
           command: |
-            cd mAIgic
             uv run ruff check . --fix
       - run:
           name: Run Tests with Pytest
           command: |
-            cd mAIgic
             uv run pytest
