@@ -12,22 +12,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install UV
+          name: Setup-Lint-Test
           command: |
             curl -LsSf https://astral.sh/uv/install.sh | sh
             source $HOME/.cargo/env
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
             source ~/.bashrc
             uv sync
-      - run:
-          name: Lint with Ruff
-          command: |
-            uv run ruff check .
-      - run:
-          name: Format with Ruff
-          command: |
             uv run ruff check . --fix
-      - run:
-          name: Run Tests with Pytest
-          command: |
             uv run pytest
