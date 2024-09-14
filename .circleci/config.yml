@@ -16,11 +16,11 @@ jobs:
           command: |
             curl -LsSf https://astral.sh/uv/install.sh | sh
             source $HOME/.cargo/env
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
             source ~/.bashrc
       - run:
           name: Initialize UV Project
           command: |
-            uv
             uv sync
       - run:
           name: Lint with Ruff
