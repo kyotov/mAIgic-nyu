@@ -21,6 +21,7 @@ jobs:
       - run:
           name: Initialize UV Project
           command: |
+            ls -al
             uv sync
       - run:
           name: Lint with Ruff
