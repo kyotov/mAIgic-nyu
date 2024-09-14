@@ -14,12 +14,13 @@ jobs:
       - run:
           name: Install UV
           command: |
-            # Install uv via curl
             curl -LsSf https://astral.sh/uv/install.sh | sh
             source $HOME/.cargo/env
+            source ~/.bashrc
       - run:
           name: Initialize UV Project
           command: |
+            uv
             uv sync
       - run:
           name: Lint with Ruff
