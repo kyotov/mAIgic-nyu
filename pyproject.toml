@@ -11,4 +11,4 @@ dependencies = [
 ]
 [tool.ruff.lint]
 select = ["ALL"]
-extend-ignore = ["S101"]
+extend-ignore = ["S101", "D211", "D213"]
