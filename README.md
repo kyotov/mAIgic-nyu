@@ -22,25 +22,25 @@ The project aims to leverage AI to track and remind for follow up messages for s
 
 Note: One can run tools like ruff and pytest independently or can run them through `uv`.
 
-## License
-### MIT License
+## Commit Style Guide
+- Request to `strictly adhere` to the suggested commit style guide.
+- The project follows Udacity's [Commit Style Guide](https://udacity.github.io/git-styleguide/).
+- Reason:
+    - It is simple, elegant, concise and effective.
+    - It does not have many rules that could create confusion but yet have just enough to keep things working smoothly through clear and concise communication.
 
-Copyright (c) 2024 Satyam Chatrola
+## GitHub Workflow
+- Members of same team can preferably `clone` the repository.
+- Make sure to push new changes to `dev` remote branch.
+- Create a `Pull Request` and the changes would be reviewed and merged to the `main` remote branch. `Review` includes code, code quality, code standards, commit style guides, and Pull Request descriptions. Consistent code standards and documentation would be aided by `ruff`.
+- `main` branch serves as production branch which would accumulate new changes, features and bug-fixes from `dev` branch.
+- Would appreciate if you open `issues` whenever you come across any. Issues can be bugs, proposed features, performance / code improvement proposals, etc.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Requesting access to project and CI space
+- Send your`github username` to become collaborators to the project.
+- Send your `email id` used to `register with circleCI` to get access to the circleCI organization to manage CI workflows and triggers. You will receive an invitation in the provided email's inbox to join the circleCI organization.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Note: Request to keep all `communication` in the Google Chats Project Group.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+# License
+mAIgic has a MIT-style license, as found in the [LICENSE](LICENSE) file.
