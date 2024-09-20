@@ -8,7 +8,7 @@ The project aims to leverage AI to track and remind for follow up messages for s
 - Project dependency management tool: uv
 - Project linter: ruff
 - Project tester: pytest
-- Continuous Integration (CI): circleCI
+- Continuous Integration (CI) tool: circleCI
 
 # Instructions
 ## Setup
@@ -39,6 +39,7 @@ Note: One can run tools like ruff and pytest independently or can run them throu
 ## Requesting access to project and CI space
 - Send your`github username` to become collaborators to the project.
 - Send your `email id` used to `register with circleCI` to get access to the circleCI organization to manage CI workflows and triggers. You will receive an invitation in the provided email's inbox to join the circleCI organization.
+- Currently, the `magic2` CircleCI project is attached to this project.
 
 Note: Request to keep all `communication` in the Google Chats Project Group.
 
