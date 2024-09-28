@@ -11,4 +11,5 @@ dependencies = [
     "google-auth-oauthlib>=1.2.1",
     "google-apps-chat>=0.1.11",
     "openai>=1.50.2",
+    "black>=24.8.0",
 ]
