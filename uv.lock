@@ -281,6 +281,12 @@ wheels = [
 ]
 
 [[package]]
+name = "html2text"
+version = "2024.2.26"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1a/43/e1d53588561e533212117750ee79ad0ba02a41f52a08c1df3396bd466c05/html2text-2024.2.26.tar.gz", hash = "sha256:05f8e367d15aaabc96415376776cdd11afd5127a77fce6e36afc60c563ca2c32", size = 56527 }
+
+[[package]]
 name = "httpcore"
 version = "1.0.5"
 source = { registry = "https://pypi.org/simple" }
@@ -360,7 +366,9 @@ dependencies = [
     { name = "google-auth" },
     { name = "google-auth-httplib2" },
     { name = "google-auth-oauthlib" },
+    { name = "html2text" },
     { name = "openai" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -377,7 +385,9 @@ requires-dist = [
     { name = "google-auth", specifier = ">=2.35.0" },
     { name = "google-auth-httplib2", specifier = ">=0.2.0" },
     { name = "google-auth-oauthlib", specifier = ">=1.2.1" },
+    { name = "html2text", specifier = ">=2024.2.26" },
     { name = "openai", specifier = ">=1.50.2" },
+    { name = "pydantic", specifier = ">=2.9.2" },
 ]
 
 [package.metadata.requires-dev]
