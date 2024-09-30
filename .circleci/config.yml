@@ -1,0 +1,23 @@
+version: 2.1
+
+workflows:
+  build-test:
+    jobs:
+      - build
+
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.11.10
+    steps:
+      - checkout
+      - run:
+          name: Setup-Lint-Test
+          command: |
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+            source $HOME/.cargo/env
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+            source ~/.bashrc
+            uv sync
+            uv run ruff check . --fix
+            uv run pytest
