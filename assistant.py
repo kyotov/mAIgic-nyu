@@ -76,6 +76,8 @@ class Assistant:
         assert len(r.choices) == 1
         assert r.choices[0].finish_reason == "stop"
         result = r.choices[0].message.content
+        LOGGER.info(pformat(result))
+        result = result.removeprefix("```json").removesuffix("```")
         result = json.loads(result)
         result["id"] = item.id
         LOGGER.info(pformat(result))
