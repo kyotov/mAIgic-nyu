@@ -52,7 +52,7 @@ class Server:
             self.pool = pool
             asyncio.run(self._slack_app())
 
-    async def message_hello(self, message, say, ack):
+    async def message_hello(self, message, ack):
         await ack()
         match message["text"]:
 
