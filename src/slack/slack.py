@@ -9,7 +9,7 @@ class Slack:
 
     def send(self, thread: str | None, text: str) -> None:
         r = self.client.chat_postMessage(
-            channel="C01CAH729TK",
+            channel=os.getenc("SLACK_CHANNEL_ID"),
             thread=thread,
             text=text,
         )

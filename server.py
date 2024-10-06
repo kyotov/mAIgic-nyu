@@ -68,7 +68,7 @@ class Server:
                 time = datetime.fromisoformat(result["time_received"])
 
                 r = await app.client.chat_postMessage(
-                    channel="C01CAH729TK",
+                    channel=os.getenv("SLACK_CHANNEL_ID"),
                     text=f"Handling `{result['id']}`...",
                     unfurl_links=False,
                     unfurl_media=False,
@@ -77,7 +77,7 @@ class Server:
                 ts = r.get("ts")
 
                 r = await app.client.chat_update(
-                    channel="C01CAH729TK",
+                    channel=os.getenv("SLACK_CHANNEL_ID"),
                     ts=ts,
                     blocks=[
                         {

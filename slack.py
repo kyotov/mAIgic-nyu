@@ -1,9 +1,10 @@
 from slack_sdk import WebClient
+import os
 
 
 def main():
     client = WebClient(
-        token="xoxb-1402866809893-7831129119424-vgQR7hEp45Iic0qCwen5qLQZ"
+        token=os.getenv("SLACK_BOT_TOKEN")
     )
 
     # r = client.users_list()
@@ -13,7 +14,8 @@ def main():
     # r = client.conversations_open(channel="U01C91V6QNQ")
     # r.validate()
 
-    r = client.chat_postMessage(channel="C01CAH729TK", text="hello!")
+    r = client.chat_postMessage(channel=os.getenv("SLACK_CHANNEL_ID"),
+                                text="hello!")
     r.validate()
 
 
