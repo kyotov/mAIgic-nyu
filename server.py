@@ -54,6 +54,22 @@ class Server:
 
     async def message_hello(self, message, ack):
         await ack()
+
+        if thread_ts := message.get("thread_ts"):
+            text = message["text"]
+            future = self.pool.submit(self.assistant.handle_reply, thread_ts, text)
+            response = await self.await_future(future)
+            LOGGER.info("response: %s", response)
+
+            r = await app.client.chat_postMessage(
+                channel=os.getenv("SLACK_CHANNEL_ID"),\
+                thread_ts=thread_ts,
+                text=response,
+                unfurl_links=False,
+                unfurl_media=False,
+            )
+            r.validate()
+
         match message["text"]:
 
             case str(value) if "fetch" in value:
@@ -126,8 +142,6 @@ class Server:
                 item.slack_channel = "C01CAH729TK"
                 item.slack_thread = r.get("ts")
                 db.session.commit()
-
-                LOGGER.info(pformat(r.data))
 
         LOGGER.info("\n" + pformat(message))
 

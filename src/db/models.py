@@ -25,7 +25,7 @@ class Chat(Base):
     __tablename__ = "chats"
 
     seq = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(Enum(ItemType), nullable=False)
+    type = Column(Enum(ItemType), nullable=False) # this and the next one is a foreign key to Item
     id = Column(String)
     role = Column(String)
     content = Column(String)

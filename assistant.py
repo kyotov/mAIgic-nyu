@@ -1,15 +1,117 @@
 import json
-from pprint import pformat, pprint
+from pprint import pformat
 from typing import Any
-from src.db.models import DB, Item, ItemType
+from src.db.models import DB, Chat, Item, ItemType
 from src.gmail.client import Gmail
 from src.gmail.models import GMailMessage
 import logging
 
 from src.gpt.gpt import GPT, Line, Role
-from src.slack.slack import Slack
+from pydantic import BaseModel
 
 LOGGER = logging.getLogger(__file__)
+
+
+GMAIL_PRIMER = Line(
+    role=Role.SYSTEM,
+    # FIXME: this content needs to be tailored to the custome
+    content="""
+        I am Kamen Yotov.
+        My emails are kamen@yotov.org, kyotov@gmail.com, ky12@nyu.edu.
+        
+        When I first receive an email, I want you to analyze it respond with the analysis in json as follows:
+
+        * "author"
+        * "time_received" in iso format
+        * "categories"
+            ** "urgent": bool
+            ** "important": bool
+            ** "spam": bool
+        * "summary" : summary of the content
+        * "action": proposed next action
+
+        Then answer my follow up questions in normal text.
+    """,
+)
+
+
+class ItemKey(BaseModel):
+    type: ItemType
+    id: str
+
+    @classmethod
+    def from_item(cls, item: Item) -> "ItemKey":
+        return ItemKey(type=item.type, id=item.id)
+
+
+class Conversation:
+    def __init__(self, db: DB, gpt: GPT, item_key: ItemKey) -> None:
+        self.db = db
+        self.gpt = gpt
+        self.item_key = item_key
+
+        self.item = (
+            db.session.query(Item)
+            .where((Item.type == item_key.type) & (Item.id == item_key.id))
+            .one()
+        )
+
+        self.thread = list(
+            db.session.query(Chat)
+            .where((Chat.type == item_key.type) & (Chat.id == item_key.id))
+            .order_by(Chat.seq)
+            .all()
+        )
+
+    def primer_lines(self) -> list[Line]:
+        return [
+            GMAIL_PRIMER,
+            Line(role=Role.USER, content=self.item.content),
+        ]
+
+    def handle_user_reply(self, message: str = "") -> str:
+        lines = self.primer_lines() + [
+            Line(role=x.role, content=x.content) for x in self.thread
+        ]
+
+        if len(lines) == 2:  # this conversation has not started yet!
+            assert message == ""  # there is no message by user yet!
+        else:
+            assert len(lines) >= 3, lines  # there should be at least 1 reply ...
+            assert lines[-1].role == Role.ASSISTANT  # ... by the assistant
+
+            assert message
+            lines.append(Line(role=Role.USER, content=message))
+
+        r = self.gpt.complete(lines)
+
+        # TODO: this is where we need to differentiate if it is a tool/function call...
+        #       for now assert it is not!
+        assert len(r.choices) == 1
+        choice = r.choices[0]
+        assert choice.finish_reason == "stop"
+        result = choice.message.content
+        assert result
+
+        self.db.session.add(
+            Chat(
+                type=self.item.type,
+                id=self.item.id,
+                role=Role.USER,
+                content=message,
+            )
+        )
+        self.db.session.add(
+            Chat(
+                type=self.item.type,
+                id=self.item.id,
+                role=Role.ASSISTANT,
+                content=result,
+            )
+        )
+        self.db.session.commit()
+
+        return result
 
 
 class Assistant:
@@ -43,51 +145,55 @@ class Assistant:
                     LOGGER.debug("added %s to database", mm["id"])
                     new_count += 1
             return new_count
-        except Exception as e:
+        except Exception:
             LOGGER.exception("fetch_emails failed")
             raise
 
-    def handle_new_email(self, item: Item) -> dict[str, Any]:
-        gpt = GPT()
-        lines = [
-            Line(
-                role=Role.SYSTEM,
-                content="""
-                    I am Kamen Yotov.
-                    My emails are kamen@yotov.org, kyotov@gmail.com, ky12@nyu.edu.
-                    
-                    When I receive an email, I want you to analyze it as follows and respond in json.
-
-                    Since you are the first to see the email you have to present it to me as news.
-
-                    * "author"
-                    * "time_received" in iso format
-                    * "categories"
-                        ** "urgent": bool
-                        ** "important": bool
-                        ** "spam": bool
-                    * "summary" : summary of the content
-                    * "action": proposed next action
-                 """,
-            ),
-            Line(role=Role.USER, content=item.content),
-        ]
-        r = gpt.complete(lines)
-        assert len(r.choices) == 1
-        assert r.choices[0].finish_reason == "stop"
-        result = r.choices[0].message.content
-        LOGGER.info(pformat(result))
-        result = result.removeprefix("```json").removesuffix("```")
-        result = json.loads(result)
-        result["id"] = item.id
-        LOGGER.info(pformat(result))
-        return result
-
     def handle_one(self) -> dict[str, Any]:
-        db = DB()
-        if new_item := db.session.query(Item).where(Item.slack_thread.is_(None)).first():
-            LOGGER.info("handling %s", new_item.id)
-            return self.handle_new_email(new_item)
+        try:
+            db = DB()
+            gpt = GPT()
+
+            if (
+                new_item := db.session.query(Item)
+                .where(Item.slack_thread.is_(None))
+                .first()
+            ):
+                convo = Conversation(db, gpt, ItemKey.from_item(new_item))
+
+                LOGGER.info("handling %s", new_item.id)
+
+                result = convo.handle_user_reply()
+                result = result.removeprefix("```json").removesuffix("```")
+                result = json.loads(result)
+                result["id"] = new_item.id
+
+                LOGGER.info(pformat(result))
+                return result
+        except:
+            LOGGER.exception("")
+            raise
+
+    def handle_reply(self, thread_ts: str, reply: str) -> str:
+        try:
+            db = DB()
+            gpt = GPT()
+
+            if (
+                item := db.session.query(Item)
+                .where(Item.slack_thread == thread_ts)
+                .first()
+            ):
+                convo = Conversation(db, gpt, ItemKey.from_item(item))
+
+                LOGGER.info("handling reply on %s for %s", thread_ts, item.id)
+                result = convo.handle_user_reply(reply)
+                LOGGER.info(pformat(result))
+                return result
+            else:
+                raise RuntimeError(f"item not found for {thread_ts}")
+        except:
+            LOGGER.exception("")
 
 
 if __name__ == "__main__":
