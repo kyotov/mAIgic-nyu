@@ -30,7 +30,7 @@ GMAIL_PRIMER = Line(
         * "summary" : summary of the content
         * "action": proposed next action
 
-        Then answer my follow up questions in normal text.
+        Then answer my follow up questions in markdown supported by slack api.
     """,
 )
 
