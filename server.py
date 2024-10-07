@@ -6,6 +6,7 @@ import os
 from concurrent.futures import Future, ProcessPoolExecutor
 from pprint import pformat
 from queue import Queue
+import re
 from typing import TypeVar
 
 from slack_bolt.adapter.socket_mode.aiohttp import AsyncSocketModeHandler
@@ -52,6 +53,18 @@ class Server:
             self.pool = pool
             asyncio.run(self._slack_app())
 
+    def fix_md_for_slack(self, md_text: str) -> str:
+        # Convert **bold** to *bold* (Slack syntax)
+        slack_text = re.sub(r"\*\*(.*?)\*\*", r"*\1*", md_text)
+        
+        # Convert *italic* to _italic_ (Slack syntax)
+        slack_text = re.sub(r"\*(.*?)\*", r"_\1_", slack_text)
+        
+        # Convert [text](link) to <link|text> (Slack link syntax)
+        slack_text = re.sub(r"\[(.*?)\]\((.*?)\)", r"<\2|\1>", slack_text)
+
+        return slack_text
+
     async def message_hello(self, message, ack):
         await ack()
 
@@ -64,7 +77,17 @@ class Server:
             r = await app.client.chat_postMessage(
                 channel=os.getenv("SLACK_CHANNEL_ID"),\
                 thread_ts=thread_ts,
-                text=response,
+                blocks=[
+                        {
+                            "type": "context",
+                            "elements": [
+                                {
+                                    "type": "mrkdwn",
+                                    "text": self.fix_md_for_slack(response),
+                                },
+                            ],
+                        },
+                ],
                 unfurl_links=False,
                 unfurl_media=False,
             )
