@@ -3,13 +3,16 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.12
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install uv
           command: |
-            pip install pytest ruff mypy
+            curl -sSL https://install.uv.tools | bash
+      - run:
+          name: Install dependencies
+          command: uv init  # Installs dependencies from pyproject.toml
       - run:
           name: Run pytest tests
           command: pytest tests
