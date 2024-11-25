@@ -1,8 +1,17 @@
-# mAIgic
+# mAIgic - Gmail module
 
-This project will organize life by tracking messages and information that need follow-ups and reminding the user to take follow-ups. It will also provide a search based on individuals.
+This module can be used to communicate with Gmail account. With appropriate credentials, one can access the respective Gmail account's content. The module supports 2 operations as of now:
 
-The project aims to leverage AI to track and remind for follow up messages for systems like Slack, Trello, Whatsapp, Gmail, Google Docs comments, etc.
+- Fetch a specific email.
+- Fetch all emails.
+
+There are multiple classes that can effectively represent an email and more importantly, its metadata. The metadata includes the following:
+
+- Labels
+- Headers
+- Attachments
+- Thread id
+  etc.
 
 # Technical tools
 
@@ -15,7 +24,6 @@ The project aims to leverage AI to track and remind for follow up messages for s
 # Instructions
 
 Collaboration doc for this initiative: https://docs.google.com/document/d/1duhM5Ufkq_doBnMvHo65S7cplmUJw4KqQvDRfZlmj7s/edit
-
 
 ## Setup
 
