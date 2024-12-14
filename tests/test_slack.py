@@ -1,36 +1,56 @@
-# test_slack.py
-import unittest
+import os
 from unittest.mock import MagicMock, patch
+import pytest
+from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.error import BoltError
+from src.maigic_nyu.api import SlackApp  # Replace 'your_module_name' with the actual file name
+from dotenv import load_dotenv
 
-class TestSlackBot(unittest.TestCase):
-    def test_message_hello(self):
-        with patch('slack_bolt.App') as MockApp:
-            # Create a mock instance of App
-            mock_app_instance = MockApp.return_value
+def test_slack_app_initialization():
+    load_dotenv()
+    """Test if the SlackApp initializes without errors."""
 
-            # Define a decorator function to capture the handler
-            def message_decorator(*args, **kwargs):
-                def wrapper(func):
-                    # Capture the handler function
-                    self.handler_function = func
-                return wrapper
+    # Mock handler
+    mock_handler = MagicMock()
 
-            mock_app_instance.message.side_effect = message_decorator
+    try:
+        slack_app = SlackApp(message_handler=mock_handler, bot_token=os.environ.get("SLACK_BOT_TOKEN"), app_token=os.environ.get("SLACK_APP_TOKEN"))
+        assert isinstance(slack_app.app, App)
+        assert isinstance(slack_app.socket, SocketModeHandler)
+    except BoltError:
+        pytest.fail("SlackApp initialization failed!")
 
-            # Import Slack app
-            import src.maigic_nyu.slack.slack
+@patch("slack_bolt.App.message")
+def test_message_handler_registration(mock_message_decorator):
+    """Test if the message handler is registered properly."""
+    load_dotenv()
+    mock_handler = MagicMock()
 
-            say = MagicMock()
-            message = {
-                'user': 'U123456',
-                'text': 'Hello, bot!'
-            }
+    # Initialize SlackApp
+    slack_app = SlackApp(message_handler=mock_handler, bot_token=os.environ.get("SLACK_BOT_TOKEN"), app_token=os.environ.get("SLACK_APP_TOKEN"))
 
-            # Call the handler function with the mock 'say' and 'message'
-            self.handler_function(message=message, say=say)
+    # Ensure the decorator is called
+    mock_message_decorator.assert_called_once()
 
-            expected_response = "Hey there <@U123456>! I am responding to: Hello, bot!"
-            say.assert_called_once_with(expected_response)
+def test_message_handler_execution():
+    """Test if the custom message handler is executed when a message event occurs."""
+    load_dotenv()
 
-if __name__ == '__main__':
-    unittest.main()
+    def mock_handler(message, say):
+        say(f"Handled message: {message['text']}")
+
+    # Initialize SlackApp
+    slack_app = SlackApp(message_handler=mock_handler, bot_token=os.environ.get("SLACK_BOT_TOKEN"), app_token=os.environ.get("SLACK_APP_TOKEN"))
+    
+    # Mock the say function
+    mock_say = MagicMock()
+
+    # Sample message
+    test_message = {"user": "U123", "text": "Hello, Slack!"}
+
+    # Simulate the message handler
+    slack_app.handler(test_message, mock_say)
+
+    # Assert that the say function was called with the correct message
+    mock_say.assert_called_once_with("Handled message: Hello, Slack!")
