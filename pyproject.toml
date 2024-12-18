@@ -1,0 +1,17 @@
+[project]
+name = "mAIgic"
+version = "0.1.0"
+description = "An AI-powered assistant designed to enhance productivity and organization by tracking messages and important information across multiple platforms"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest",
+    "ruff",
+    "mypy",
+    "slack-bolt>=1.21.2",
+    "python-dotenv>=1.0.1",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+extend-ignore = ["S101", "D211", "D213"]
