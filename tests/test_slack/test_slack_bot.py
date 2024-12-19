@@ -2,6 +2,8 @@
 
 import pytest
 from unittest.mock import patch, MagicMock
+from slack_sdk.web.client import WebClient
+
 from src.slack.slack_bot import (
     add_to_trello_task,
     remove_from_trello_task,
@@ -10,7 +12,6 @@ from src.slack.slack_bot import (
     handle_fetch_emails,
     handle_show_emails,
 )
-from slack_sdk.web.client import WebClient
 
 # Helper function to simulate messages
 def create_message_event(text):
@@ -24,7 +25,8 @@ def create_context(matches):
 def say():
     return MagicMock()
 
-@patch('src.slack.slack_bot.add_card_to_trello')
+
+@patch('src.slack.slack_bot.trello_client.add_card_to_trello')
 @patch('src.slack.slack_bot.post_to_slack')
 def test_add_to_trello_task(mock_post_to_slack, mock_add_card, say):
     mock_add_card.return_value = {'id': 'card_id_12345'}
@@ -34,7 +36,8 @@ def test_add_to_trello_task(mock_post_to_slack, mock_add_card, say):
     mock_add_card.assert_called_once()
     mock_post_to_slack.assert_called_once()
 
-@patch('src.slack.slack_bot.delete_card_from_trello')
+
+@patch('src.slack.slack_bot.trello_client.delete_card_from_trello')
 @patch('src.slack.slack_bot.post_to_slack')
 def test_remove_from_trello_task(mock_post_to_slack, mock_delete_card, say):
     mock_delete_card.return_value = 'card_id_12345'
@@ -44,7 +47,8 @@ def test_remove_from_trello_task(mock_post_to_slack, mock_delete_card, say):
     mock_delete_card.assert_called_once()
     mock_post_to_slack.assert_called_once()
 
-@patch('src.slack.slack_bot.archive_trello_list')
+
+@patch('src.slack.slack_bot.trello_client.archive_trello_list')
 @patch('src.slack.slack_bot.post_to_slack')
 def test_delete_trello_list(mock_post_to_slack, mock_archive_list, say):
     mock_archive_list.return_value = True
@@ -54,7 +58,8 @@ def test_delete_trello_list(mock_post_to_slack, mock_archive_list, say):
     mock_archive_list.assert_called_once()
     mock_post_to_slack.assert_called_once()
 
-@patch('src.slack.slack_bot.get_trello_cards')
+
+@patch('src.slack.slack_bot.trello_client.get_trello_cards')
 @patch('src.slack.slack_bot.post_to_slack')
 def test_show_tasks_in_list(mock_post_to_slack, mock_get_cards, say):
     mock_get_cards.return_value = [{'name': 'Task 1'}, {'name': 'Task 2'}]
@@ -64,11 +69,13 @@ def test_show_tasks_in_list(mock_post_to_slack, mock_get_cards, say):
     mock_get_cards.assert_called_once()
     mock_post_to_slack.assert_called_once()
 
+
 @patch('src.slack.slack_bot.fetch_and_post_emails')
 def test_handle_fetch_emails(mock_fetch_emails, say):
     message = create_message_event('fetch emails')
     handle_fetch_emails(message=message, say=say)
     mock_fetch_emails.assert_called_once()
+
 
 @patch('src.slack.slack_bot.fetch_and_post_emails')
 def test_handle_show_emails(mock_fetch_emails, say):

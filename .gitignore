@@ -168,3 +168,4 @@ cython_debug/
 credentials.json
 token.json
 token_calendar.json
+.python-version
