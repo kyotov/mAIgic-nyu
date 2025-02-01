@@ -1,0 +1,15 @@
+[project]
+name = "ky-mail-gmail-impl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-api-python-client>=2.146.0",
+    "google-auth-oauthlib>=1.2.1",
+    "google-auth>=2.35.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

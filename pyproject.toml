@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
+
+[x]
 dependencies = [
     "google-api-python-client>=2.146.0",
     "google-auth>=2.35.0",
@@ -29,3 +31,6 @@ dev-dependencies = [
     "mypy>=1.11.2",
     "ruff>=0.6.8",
 ]
+
+[tool.uv.workspace]
+members = ["packages", "ky_mail_api", "ky_mail_gmail_impl", "ky_test"]
