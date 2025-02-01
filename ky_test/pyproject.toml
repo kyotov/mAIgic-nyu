@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ky-mail-api",
+    "ky-mail-gmail-impl",
 ]
 
 [project.scripts]
@@ -17,3 +18,4 @@ build-backend = "hatchling.build"
 
 [tool.uv.sources]
 ky-mail-api = { workspace = true }
+ky-mail-gmail-impl = { workspace = true }
