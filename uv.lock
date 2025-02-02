@@ -192,6 +192,12 @@ wheels = [
 ]
 
 [[package]]
+name = "html2text"
+version = "2024.2.26"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1a/43/e1d53588561e533212117750ee79ad0ba02a41f52a08c1df3396bd466c05/html2text-2024.2.26.tar.gz", hash = "sha256:05f8e367d15aaabc96415376776cdd11afd5127a77fce6e36afc60c563ca2c32", size = 56527 }
+
+[[package]]
 name = "httplib2"
 version = "0.22.0"
 source = { registry = "https://pypi.org/simple" }
@@ -225,6 +231,7 @@ dependencies = [
     { name = "google-api-python-client" },
     { name = "google-auth" },
     { name = "google-auth-oauthlib" },
+    { name = "html2text" },
 ]
 
 [package.metadata]
@@ -232,6 +239,7 @@ requires-dist = [
     { name = "google-api-python-client", specifier = ">=2.146.0" },
     { name = "google-auth", specifier = ">=2.35.0" },
     { name = "google-auth-oauthlib", specifier = ">=1.2.1" },
+    { name = "html2text", specifier = ">=2024.2.26" },
 ]
 
 [[package]]
