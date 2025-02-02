@@ -46,7 +46,7 @@ class _MessagePart:
 
         Create a dictionary of headers and cache the result.
 
-        TODO(kamen): This may "eat" headers of multiple headers have the same name!!!
+        TODO(kamen): This may "eat" headers if multiple headers have the same name!!!
                         Check if this is possible and if so, how to handle it.
         """
 
