@@ -1,3 +1,14 @@
+/.jj
+/.venv
+/dist
+/*.json
+/email_examples
+__pycache__
+/maigic.db
+/secrets.sh
+/secret.sh
+/secrets
+token.json
 /token.json
 /credentials.json
 /gmail_creds_ashish.json
