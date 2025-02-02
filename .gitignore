@@ -9,3 +9,6 @@ __pycache__
 /secret.sh
 /secrets
 token.json
+/token.json
+/credentials.json
+/gmail_creds_ashish.json
