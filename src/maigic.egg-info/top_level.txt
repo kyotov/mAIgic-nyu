@@ -1,5 +1,0 @@
-__init__
-db
-gmail
-gpt
-slack
