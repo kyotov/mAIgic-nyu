@@ -221,8 +221,3 @@ class Client(ky_mail_api.Client):
             token.write(creds.to_json())
 
         return creds
-
-
-# Dependency Injection of this implementation into the API
-#
-ky_mail_api.get_client = lambda: Client()
