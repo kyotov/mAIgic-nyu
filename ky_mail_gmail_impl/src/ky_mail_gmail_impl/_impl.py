@@ -1,7 +1,7 @@
 import base64
 import os
 from functools import cache
-from pprint import pformat
+from pprint import pformat, pprint
 from typing import ClassVar, Iterator
 
 from google.auth.transport.requests import Request
@@ -133,13 +133,20 @@ class Message(ky_mail_api.Message):
                     if p.mime_type in ("text/plain", "text/html"):
                         return self._cleanup_body(p.body)
 
-            case "multipart/mixed":
+            case "multipart/mixed" | "multipart/report" | "multipart/related":
                 for p in part.parts:
-                    if p.mime_type in ("multipart/alternative", "text/html"):
+                    if p.mime_type in (
+                        "multipart/alternative",
+                        "multipart/related",
+                        "text/html",
+                    ):
                         return self._extract_body(p)
 
         # if we end up here, we did not find an altenative we know how to parse!!!
-        m = f"{part.mime_type}: cannot parse any of {[p.mime_type for p in part.parts]}"
+        pprint(part.as_dict())
+        m = (
+            f"{part.mime_type}: cannot parse any of {[p.mime_type for p in part.parts]}",
+        )
         raise RuntimeError(m)
 
     def _cleanup_body(self, body: str) -> str:
