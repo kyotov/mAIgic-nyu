@@ -130,8 +130,10 @@ class Message(ky_mail_api.Message):
 
             case "multipart/alternative":
                 for p in part.parts:
-                    if p.mime_type in ("text/plain", "text/html"):
+                    if p.mime_type == "text/plain":
                         return self._cleanup_body(p.body)
+                    if p.mime_type == "text/html":
+                        return self._extract_body(p)
 
             case "multipart/mixed" | "multipart/report" | "multipart/related":
                 for p in part.parts:
