@@ -43,44 +43,51 @@ def main_mix() -> None:
     c = ky_mail_api.get_client()
     a = ky_ai_assistant_api.get_client()
 
-    for i, m in enumerate(c.get_messages()):
-        header = textwrap.dedent(f"""
-                --------------------------------------------------------------------------------
-                --------------------------------------------------------------------------------
-                From: {m.from_}
-                Subject: {m.subject}
-                Date: {m.date}
-                URL: https://mail.google.com/mail/u/0/#all/{m.id}
-                --------------------------------------------------------------------------------
-                """)
-        email = header + m.body
+    with open("email.log", "w") as f:
+        for i, m in enumerate(c.get_messages()):
+            header = textwrap.dedent(f"""
+                    --------------------------------------------------------------------------------
+                    --------------------------------------------------------------------------------
+                    From: {m.from_}
+                    Subject: {m.subject}
+                    Date: {m.date}
+                    URL: https://mail.google.com/mail/u/0/#all/{m.id}
+                    --------------------------------------------------------------------------------
+                    """)
+            email = header + m.body
 
-        thread = a.new_thread(
-            """
-            Please analyze the following email and summarize as follows:
-            
-            * spam: ... (a % probability that the email is spam)
-            * urgent: ... (a % probability that the email is urgent)
-            * category: ...
-            * suggested action: ...
+            thread = a.new_thread(
+                """
+                Please analyze the following email and summarize as follows (in json format):
+                
+                * spam: ... (a % probability that the email is spam)
+                * urgent: ... (a % probability that the email is urgent)
+                * category: ...
+                * suggested action: ...
 
-            In case the email is a shipping notification, also include:
-            * sender: ...
-            * tracking number: ... (ideally hyperlinked)
-            * expected on: ... (delivery date)
-            * package content: ... 
+                In case the email is a shipping notification, also include:
+                * sender: ...
+                * tracking number: ...
+                * tracking url: ...
+                * expected on: ... (delivery date)
+                * package content: ... 
 
-            For any other / unknown categories, just summarize the content.
-            """
-        )
+                * snippet: ... (snippet summary of the body of the email)
 
-        print(header)
+                (do not include any null fields in the result)
+                """
+            )
 
-        response = thread.post(email)
-        print(f"mAIgic: {response}")
+            print(header)
 
-        if i > 1:
-            break
+            response = thread.post(email)
+            print(f"mAIgic: {response}")
+
+            f.write(f"{header}\n{response}\n\n")
+            f.flush()
+
+            # if i > 1:
+            #     break
 
 
 def main() -> None:
