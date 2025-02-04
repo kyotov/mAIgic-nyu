@@ -1,0 +1,14 @@
+[project]
+name = "ky-ai-assistant-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+hello = "ky_ai_assistant_api:hello"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

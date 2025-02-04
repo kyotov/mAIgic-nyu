@@ -33,4 +33,4 @@ dev-dependencies = [
 ]
 
 [tool.uv.workspace]
-members = ["packages", "ky_mail_api", "ky_mail_gmail_impl", "ky_test"]
+members = ["packages", "ky_mail_api", "ky_mail_gmail_impl", "ky_test", "ky_ai_assistant_api", "ky_ai_assistant_openai"]

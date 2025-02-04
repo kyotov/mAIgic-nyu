@@ -1,25 +1,20 @@
 [project]
-name = "ky-test"
+name = "ky-ai-assistant-openai"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ky-ai-assistant-api",
-    "ky-ai-assistant-openai",
-    "ky-mail-api",
-    "ky-mail-gmail-impl",
+    "openai>=1.61.0",
 ]
 
 [project.scripts]
-main = "ky_test:main"
+hello = "ky_ai_assistant_openai:hello"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.sources]
-ky-mail-api = { workspace = true }
-ky-mail-gmail-impl = { workspace = true }
 ky-ai-assistant-api = { workspace = true }
-ky-ai-assistant-openai = { workspace = true }
