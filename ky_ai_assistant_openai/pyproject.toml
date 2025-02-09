@@ -1,0 +1,20 @@
+[project]
+name = "ky-ai-assistant-openai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ky-ai-assistant-api",
+    "openai>=1.61.0",
+]
+
+[project.scripts]
+hello = "ky_ai_assistant_openai:hello"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+ky-ai-assistant-api = { workspace = true }
