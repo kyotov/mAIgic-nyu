@@ -1,3 +1,4 @@
+import json
 import logging
 import textwrap
 
@@ -45,48 +46,63 @@ def main_mix() -> None:
 
     with open("email.log", "w") as f:
         for i, m in enumerate(c.get_messages()):
-            header = textwrap.dedent(f"""
-                    --------------------------------------------------------------------------------
-                    --------------------------------------------------------------------------------
-                    From: {m.from_}
-                    Subject: {m.subject}
-                    Date: {m.date}
-                    URL: https://mail.google.com/mail/u/0/#all/{m.id}
-                    --------------------------------------------------------------------------------
-                    """)
-            email = header + m.body
+            try:
+                header = textwrap.dedent(f"""
+                        --------------------------------------------------------------------------------
+                        --------------------------------------------------------------------------------
+                        From: {m.from_}
+                        Subject: {m.subject}
+                        Date: {m.date}
+                        URL: https://mail.google.com/mail/u/0/#all/{m.id}
+                        --------------------------------------------------------------------------------
+                        """)
+                email = header + m.body
 
-            thread = a.new_thread(
-                """
-                Please analyze the following email and summarize as follows (in json format):
-                
-                * spam: ... (a % probability that the email is spam)
-                * urgent: ... (a % probability that the email is urgent)
-                * category: ...
-                * suggested action: ...
+                thread = a.new_thread(
+                    """
+                    Always respond with correct JSON format. 
+                    Do not include anything outside the JSON.
+                    Do not include any null fields in the result.
 
-                In case the email is a shipping notification, also include:
-                * sender: ...
-                * tracking number: ...
-                * tracking url: ...
-                * expected on: ... (delivery date)
-                * package content: ... 
+                    Please analyze the following email and summarize as follows:
+                    
+                    * spam: ... (a % probability that the email is spam)
+                    * urgent: ... (a % probability that the email is urgent)
+                    * important: ... (a % probability that the email is important)
+                    * action_needed: ... (a % probability that the email requires action)                
+                    * category: ...
+                    * suggested_action: ...
 
-                * snippet: ... (snippet summary of the body of the email)
+                    In case the email is a shipping notification, also include:
+                    * sender: ...
+                    * tracking_number: ...
+                    * tracking_url: ...
+                    * expected_on: ... (delivery date)
+                    * package_content: ... 
 
-                (do not include any null fields in the result)
-                """
-            )
+                    * snippet: ... (snippet summary of the body of the email)
 
-            print(header)
+                    (do not include any null fields in the result)
+                    """
+                )
 
-            response = thread.post(email)
-            print(f"mAIgic: {response}")
+                print(header)
 
-            f.write(f"{header}\n{response}\n\n")
-            f.flush()
+                response = thread.post(email)
+                print(f"mAIgic: {response}")
 
-            # if i > 1:
+                j = json.loads(response)
+                j["__from"] = m.from_
+                j["__subject"] = m.subject
+                j["__date"] = m.date
+                j["__id"] = m.id
+
+                f.write(f"{json.dumps(j, indent=2)},\n")
+                f.flush()
+            except Exception as e:
+                print(f"Error: {e}")
+
+            # if i > 3:
             #     break
 
 
@@ -102,6 +118,7 @@ def nano() -> None:
 
 def main() -> None:
     nano()
+    # main_mix()
 
 
 if __name__ == "__main__":
