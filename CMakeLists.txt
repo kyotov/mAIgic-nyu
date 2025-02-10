@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_FIND_FRAMEWORK NEVER)
-set(CMAKE_PREFIX_PATH "/Users/kamen/maigic/.venv/lib/python3.12/site-packages")
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/.venv/lib/python3.12/site-packages")
 
-set(Python_ROOT_DIR /Users/kamen/maigic/.venv)
+set(Python_ROOT_DIR "${CMAKE_SOURCE_DIR}/.venv")
 set(Python_FIND_VIRTUALENV ONLY)
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
