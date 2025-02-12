@@ -115,7 +115,7 @@ def nano() -> None:
 
     from _calculator import KyCalculator
 
-    c = KyCalculator()
+    c = KyCalculator(42)
     print(c.add(1, 2))
 
 

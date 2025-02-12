@@ -2,8 +2,8 @@
 
 namespace ky {
 
-Calculator::Calculator() {}
+Calculator::Calculator(int seed) : seed(seed) {}
 
-int Calculator::add(int a, int b) { return a + b; }
+int Calculator::add(int a, int b) { return a + b + seed; }
 
 } // namespace ky
