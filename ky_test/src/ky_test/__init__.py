@@ -109,7 +109,10 @@ def main_mix() -> None:
 def nano() -> None:
     import sys
 
-    sys.path.append("/Users/kamen/maigic/build/ky_cc_calculator")
+    # NOTE: there must be a better way for this...
+    repo_root = __file__.split(f"{__name__}/src")[0]
+    sys.path.append(f"{repo_root}/build/ky_cc_calculator")
+
     from _calculator import KyCalculator
 
     c = KyCalculator()
