@@ -14,4 +14,8 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(nanobind CONFIG REQUIRED)
 
 add_subdirectory(ky_cc_calculator)
+add_subdirectory(ky_cc_calculator_2)
+add_subdirectory(ky_cc_calculator_3)
+add_subdirectory(ky_cc_calculator_4)
+add_subdirectory(ky_cc_calculator_5)
 add_subdirectory(ky_cc_test)

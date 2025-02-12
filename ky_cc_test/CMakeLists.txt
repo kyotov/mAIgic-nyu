@@ -3,4 +3,9 @@ add_executable(ky_cc_test
 )
 target_link_libraries(ky_cc_test
     ky_calculator
+    ky_calculator_2_api
+    ky_calculator_2_impl
+    ky_calculator_3
+    ky_calculator_4
+    ky_calculator_5
 )
